@@ -168,6 +168,30 @@ function *{T,S}(p1::Poly{T}, p2::Poly{S})
     Poly(a)
 end
 
+function /{T, S}(num::Poly{T}, den::Poly{S})
+    R = promote_type(T,S)
+    n = length(num)
+    m = length(den)
+    if n == 0 || m == 0
+        return Poly(R[])
+    end
+
+    r = num
+    q = zeros(R, n+m-1)
+    i = 1
+
+    while length(r) != 0 && length(r) >= m
+        t = r[1] / den[1]
+        d = endof(r) - endof(den)
+        q[end-d] = t
+        temp = zeros(R, length(q))
+        temp[end-d] = t
+        r -= Poly(temp) * den
+    end
+    # return quotient and remainder as a tuple
+    (Poly(q), r)
+end
+
 
 function ==(p1::Poly, p2::Poly)
     if length(p1) != length(p2)

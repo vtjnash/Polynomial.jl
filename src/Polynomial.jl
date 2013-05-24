@@ -174,7 +174,7 @@ function /{T, S}(num::Poly{T}, den::Poly{S})
     m = length(den)
 
     if m == 0
-        error("Division by zero")
+        throw(DivideError())
     end
 
     if n == 0

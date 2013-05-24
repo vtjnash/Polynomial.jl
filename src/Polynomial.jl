@@ -172,8 +172,13 @@ function /{T, S}(num::Poly{T}, den::Poly{S})
     R = promote_type(T,S)
     n = length(num)
     m = length(den)
-    if n == 0 || m == 0
-        return Poly(R[])
+
+    if m == 0
+        error("Division by zero")
+    end
+
+    if n == 0
+        return (Poly(R[]), Poly(R[]))
     end
 
     r = num

@@ -19,6 +19,13 @@ julia> Poly([0,1,2,3])
 Poly(1x^2 + 2x^1 + 3)
 ```
 
+An optional variable parameter can be added.
+
+```julia
+julia> Poly([1,2,3], 's')
+Poly(s^2 + 2 s + 3)
+```
+
 #### poly(r::AbstractVector)
 Construct a polynomial from its roots. This is in contrast to the `Poly` constructor, which constructs a polynomial from its coefficients.
 
@@ -30,7 +37,7 @@ Poly(1x^3 + -6x^2 + 11x^1 + -6)
 
 #### +, -, *, /, ==
 
-The usual arithmetic operators are overloaded to work on polynomials, and combinations of polynomials and scalars. Division by a polynomial is currently unimplemented. See [#1](https://github.com/vtjnash/Polynomial.jl/issues/1).
+The usual arithmetic operators are overloaded to work on polynomials, and combinations of polynomials and scalars.
 
 ```julia
 julia> a = Poly([1,2])
@@ -53,9 +60,15 @@ Poly(1x^3 + 2x^2 + -1x^1 + -2)
 
 julia> b/2
 Poly(0.5x^2 + -0.5)
+```
 
-julia> a/b
-ERROR: no method /(Poly{Int64}, Poly{Int64})
+Note that operations involving polynomials with different variables will error.
+
+```julia
+julia> a = Poly([1,2,3], 'x');
+julia> b = Poly([1,2,3], 's');
+julia> a + b
+ERROR: Polynomials must have same variable.
 ```
 
 #### polyval(p::Poly, x::Number)
@@ -104,4 +117,3 @@ julia> roots(Poly([1, 0, 0]))
  0.0
  0.0
 ```
-

@@ -31,8 +31,8 @@ promote_rule{T<:Number,L<:Number}(::Type{MPol{T}}, ::Type{L}) = MPol{promote_typ
 convert{T<:Number,L<:Number}(::Type{MPol{T}}, c::L) = MPol{T}([Int[] => convert(T, c)], []) 
 function convert{T<:Number,L<:Number}(::Type{MPol{T}}, p::MPol{L})
     r = MPol(T, vars(p))
-    for (exps, c) in p
-        r[exps] = convert(T, c)
+    for (m, c) in p
+        r[m] = convert(T, c)
     end
     r
 end
@@ -44,16 +44,16 @@ getindex{T<:Number}(p::MPol{T}, exps::Vector{Int}) =
 
 getindex{T<:Number}(p::MPol{T}, exps::Int...) = p[[exps...]]
 
-function setindex!{T<:Number}(p::MPol{T}, v::T, exps::Int...)
+function setindex!{T<:Number}(p::MPol{T}, v::T, m::Int...)
     if isapprox(v, zero(T))
-        delete!(coeffs(p), [exps...])
+        delete!(coeffs(p), [m...])
     else
-        coeffs(p)[[exps...]] = v
+        coeffs(p)[[m...]] = v
     end
 end
 
-setindex!{T<:Number}(p::MPol{T}, v::T, exps::Vector{Int}) =
-    p[exps...] = v
+setindex!{T<:Number}(p::MPol{T}, v::T, m::Vector{Int}) =
+    p[m...] = v
     
 start(p::MPol) = start(coeffs(p))
 next(p::MPol, state) = next(coeffs(p), state)
@@ -61,8 +61,8 @@ done(p::MPol, state) = done(coeffs(p), state)
 
 function copy{T<:Number}(p::MPol{T})
     r = MPol(T, vars(p))
-    for (exps, c) in p
-        r[exps] = c
+    for (m, c) in p
+        r[m] = c
     end
     r
 end
@@ -79,13 +79,13 @@ function deg(p::MPol)
 end
 
 function ==(p1::MPol, p2::MPol)
-    for (exps, c) in p1
-        if p2[exps] != c
+    for (m, c) in p1
+        if p2[m] != c
             return false
         end
     end
-    for (exps, c) in p2
-        if p1[exps] != c
+    for (m, c) in p2
+        if p1[m] != c
             return false
         end
     end

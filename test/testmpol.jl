@@ -15,4 +15,4 @@ r = zero(MPol{Float64}, [:x, :y])
 r += 10y
 r += 42x
 
-@test r[[1,0]] == 42.0
+@test r[1,0] == 42.0

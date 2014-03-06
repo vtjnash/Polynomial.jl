@@ -1,16 +1,16 @@
 function +(ps::MPol...)
     pu = PolUnion(ps...)
-    r = zero(newtype(pu), newvars(pu))
+    r = zero(pu)
     for pindex = 1:length(ps)
-        for (exps, c) in ps[pindex]
-            r[newexps(pu, exps, pindex)] += c
+        for (m, c) in ps[pindex]
+            r[exps(pu, m, pindex)] += c
         end
     end
     r
 end
 function +{T<:Number,L<:Number}(p::MPol{T}, s::L)
     r = convert(MPol{promote_type(T, L)}, p)
-    r[zeros(Int, nvars(p))] = r[zeros(Int, nvars(p))] + s
+    r[zeros(Int, nvars(p))] += s
     r
 end
 +{T<:Number}(s::T, p::MPol) = p + s
@@ -18,12 +18,12 @@ end
 
 function -{T<:Number,L<:Number}(p::MPol{T}, q::MPol{L})
     pu = PolUnion(p, q)
-    r = zero(newtype(pu), newvars(pu))
-    for (exps, c) in p
-        r[newexps(pu, exps, 1)] += c
+    r = zero(pu)
+    for (m, c) in p
+        r[exps(pu, m, 1)] += c
     end
-    for (exps, c) in q
-        r[newexps(pu, exps, 2)] -= c
+    for (m, c) in q
+        r[exps(pu, m, 2)] -= c
     end
     r
 end
@@ -34,8 +34,8 @@ function -{T<:Number,U<:Number}(p::MPol{T}, s::U)
 end
 function -{T<:Number}(p::MPol{T})
     r = MPol(T, vars(p))
-    for (exps, c) in p
-        r[exps] = -c
+    for (m, c) in p
+        r[m] = -c
     end
     r
 end
@@ -44,18 +44,18 @@ end
 
 function *{T<:Number,U<:Number}(p1::MPol{T}, p2::MPol{U})
     pu = PolUnion(p1, p2)
-    r = zero(newtype(pu), newvars(pu))
-    for (exps1, c1) in p1
-        for (exps2, c2) in p2
-            r[newexps(pu, exps1, 1) + newexps(pu, exps2, 2)] += c1 * c2
+    r = zero(pu)
+    for (m1, c1) in p1
+        for (m2, c2) in p2
+            r[exps(pu, m1, 1) + exps(pu, m2, 2)] += c1 * c2
         end
     end
     r
 end
 function *{T<:Number,U<:Number}(s::T, p::MPol{U})
     r = zero(MPol{promote_type(T,U)}, vars(p))
-    for (exps, c) in p
-        r[exps] = s * c
+    for (m, c) in p
+        r[m] = s * c
     end
     r
 end
@@ -77,8 +77,8 @@ end
 
 function /{T<:Number,U<:Number}(p::MPol{T}, s::U)
     r = zero(MPol{promote_type(T,U)}, vars(p))
-    for (exps, c) in p
-        r[exps] = c/s
+    for (m, c) in p
+        r[m] = c/s
     end
     r
 end
@@ -86,8 +86,8 @@ end
 
 function conj(p::MPol)
     r = zero(p)
-    for (exps, c) in p
-        r[exps] = conj(c)
+    for (m, c) in p
+        r[m] = conj(c)
     end
     r
 end

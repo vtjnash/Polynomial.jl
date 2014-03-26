@@ -3,7 +3,7 @@
 module Polynomial
 #todo: sparse polynomials?
 
-export Poly, polyval, polyint, polyder, poly, roots
+export Poly, polyval, polyint, polyder, poly, roots, gcd
 
 import Base: length, endof, getindex, setindex!, copy, zero, one, convert
 import Base: show, print, *, /, //, -, +, ==, divrem, rem, eltype
@@ -357,4 +357,14 @@ function roots{T}(p::Poly{T})
     return r
 end
 
+function gcd{T<:FloatingPoint, S<:FloatingPoint}(a::Poly{T}, b::Poly{S})
+    #Finds the Greatest Common Denominator of two polynomials recursively using
+    #Euclid's algorithm: http://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor#Euclid.27s_algorithm
+    if all(abs(b.a).<=2*eps(S))
+        return a
+    else
+        s, r = divrem(a, b)
+        return gcd(b, r)
+    end
+end
 end # module Poly

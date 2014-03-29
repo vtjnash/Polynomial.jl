@@ -236,7 +236,7 @@ function divrem{T, S}(num::Poly{T}, den::Poly{S})
     n = length(num)
     deg = n-m+1
     if deg <= 0
-        return zero(Poly{R}), convert(Poly{R}, num)
+        return convert(Poly{R}, zero(num)), convert(Poly{R}, num)
     end
     d = zeros(R, n)
     q = zeros(R, deg)

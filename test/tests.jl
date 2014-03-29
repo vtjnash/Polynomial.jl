@@ -71,6 +71,12 @@ p4 = p2 * p3
 @test_throws p1/p0
 @test_throws divrem(p0,p0)
 
+@test_throws gcd(p1, p2)
+p1 = Poly([0,0,1.0,1.0])
+p2 = Poly([0,0,0,1.0,2.0,1.0])
+@test gcd(p1, p2) == p1
+@test gcd(p2, p1) == p1
+
 #Tests for multivariable support
 pX = Poly([1, 2, 3, 4, 5])
 pS1 = Poly([1, 2, 3, 4, 5], "s")

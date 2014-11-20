@@ -1,3 +1,5 @@
+This package has been deprecated in favour of https://github.com/Keno/Polynomials.jl (which started out as a fork of this package with the coefficient order reversed)
+
 # Polynomial
 
 Basic arithmetic, integration, differentiation, evaluation, and root finding over dense polynomials.

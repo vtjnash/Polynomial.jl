@@ -88,6 +88,7 @@ function print{T}(io::IO, p::Poly{T})
                 if exp > 0
                     print(io, p.var)
                     if exp > 1
+                       #print(io, '^', exp)
                        str = string(exp)
                        uni = ' '
                        for c in str
@@ -138,6 +139,7 @@ function print{T<:Complex}(io::IO, p::Poly{T})
                 if exp > 0
                     print(io, p.var)
                     if exp > 1
+                       #print(io, '^', exp)
                        str = string(exp)
                        uni = ' '
                        for c in str

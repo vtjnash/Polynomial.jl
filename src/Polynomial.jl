@@ -7,6 +7,7 @@ export Poly, polyval, polyint, polyder, poly, roots, gcd
 
 import Base: length, endof, getindex, setindex!, copy, zero, one, convert
 import Base: show, print, *, /, //, -, +, ==, divrem, rem, eltype
+import Base: Dict
 
 eps{T}(::Type{T}) = zero(T)
 eps{F<:FloatingPoint}(x::Type{F}) = Base.eps(F)
@@ -47,6 +48,18 @@ zero{T}(::Type{Poly{T}}) = Poly([zero(T)])
 one{T}(p::Poly{T}) = Poly([one(T)], p.var)
 one{T}(::Type{Poly{T}}) = Poly([one(T)])
 
+# unicode superscript map
+sup_dict = Dict([('0',0x2070),
+                 ('1',0x00B9),
+                 ('2',0x00B2),
+                 ('3',0x00B3),
+                 ('4', 0x2074),
+                 ('5', 0x2075),
+                 ('6', 0x2076),
+                 ('7', 0x2077),
+                 ('8', 0x2078),
+                 ('9', 0x2079)])
+
 function show(io::IO, p::Poly)
     print(io,"Poly(")
     print(io,p)
@@ -62,7 +75,7 @@ function print{T}(io::IO, p::Poly{T})
             pj = p[j]
             magpj = abs(pj)
             if magpj > 2*eps(T)
-                if j == 1 
+                if j == 1
                     pj < 0 && print(io, "-")    #Prepend - if first and negative
                 else
                     pj < 0 ? print(io," - ") : print(io," + ")
@@ -75,7 +88,8 @@ function print{T}(io::IO, p::Poly{T})
                 if exp > 0
                     print(io, p.var)
                     if exp > 1
-                        print(io, '^', exp)
+                        unisup = sup_dict[char(exp)]
+                        print(io, unisup)
                     end
                 end
             end
@@ -94,7 +108,7 @@ function print{T<:Complex}(io::IO, p::Poly{T})
             abs_impj = abs(imag(pj))
             if abs(pj) > 2*eps(T)
                 if !(abs_impj > 2*eps(T))
-                    if j > 1 
+                    if j > 1
                         real(pj) < 0 ? print(io," - ") : print(io," + ")
                     else
                         real(pj) < 0 && print(io, "-")    #Prepend - if first and negative
@@ -105,7 +119,7 @@ function print{T<:Complex}(io::IO, p::Poly{T})
                 if abs_repj > 2*eps(T)    #Real part is not 0
                     if abs_impj > 2*eps(T)    #Imag part is not 0
                         print(io,'(',pj,')')
-                    elseif abs(abs_repj - 1) > 2*eps(T) || j == n 
+                    elseif abs(abs_repj - 1) > 2*eps(T) || j == n
                         print(io,abs_repj)
                     end
                 else
@@ -117,7 +131,8 @@ function print{T<:Complex}(io::IO, p::Poly{T})
                 if exp > 0
                     print(io, p.var)
                     if exp > 1
-                        print(io, '^', exp)
+                        unisup = sup_dict[char(exp)]
+                        print(io, unisup)
                     end
                 end
             end

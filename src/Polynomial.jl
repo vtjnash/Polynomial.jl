@@ -88,8 +88,15 @@ function print{T}(io::IO, p::Poly{T})
                 if exp > 0
                     print(io, p.var)
                     if exp > 1
-                        unisup = sup_dict[char(exp)]
-                        print(io, unisup)
+                       str = string(exp)
+                       uni = ' '
+                       for c in str
+                           uni = [uni,sup_dict[c]]
+                       end
+                       uni = char(uni)
+                       for i = 2:length(uni)
+                           print(io,uni[i])
+                       end
                     end
                 end
             end
@@ -131,8 +138,15 @@ function print{T<:Complex}(io::IO, p::Poly{T})
                 if exp > 0
                     print(io, p.var)
                     if exp > 1
-                        unisup = sup_dict[char(exp)]
-                        print(io, unisup)
+                       str = string(exp)
+                       uni = ' '
+                       for c in str
+                           uni = [uni,sup_dict[c]]
+                       end
+                       uni = char(uni)
+                       for i = 2:length(uni)
+                           print(io,uni[i])
+                       end
                     end
                 end
             end
